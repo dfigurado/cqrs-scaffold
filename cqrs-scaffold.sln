@@ -2,11 +2,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsScaffold.IntegrationTests", "CqrsScaffold.IntegrationTests\CqrsScaffold.IntegrationTests.csproj", "{65B352B8-2190-75BC-A49B-ADDE4F7A6660}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsScaffold.IntegrationTests", "src\CqrsScaffold.IntegrationTests\CqrsScaffold.IntegrationTests.csproj", "{65B352B8-2190-75BC-A49B-ADDE4F7A6660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsScaffold.Tests", "CqrsScaffold.Tests\CqrsScaffold.Tests.csproj", "{8BC99A5F-A277-1D11-5D17-AAC7D43F55E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsScaffold.Tests", "src\CqrsScaffold.Tests\CqrsScaffold.Tests.csproj", "{8BC99A5F-A277-1D11-5D17-AAC7D43F55E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsScaffold.Tool", "CqrsScaffold.Tool\CqrsScaffold.Tool.csproj", "{8A6A739D-E919-07C3-F8C5-B49581CF922B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsScaffold.Tool", "src\CqrsScaffold.Tool\CqrsScaffold.Tool.csproj", "{8A6A739D-E919-07C3-F8C5-B49581CF922B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
