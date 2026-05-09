@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/docs/">
+    <File Path="../../../../../docs/OSS-003.md" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/CqrsScaffold.Tool/CqrsScaffold.Tool.csproj" />
+  </Folder>
+  <Folder Name="/src/tests/">
+    <Project Path="src/CqrsScaffold.IntegrationTests/CqrsScaffold.IntegrationTests.csproj" />
+    <Project Path="src/CqrsScaffold.Tests/CqrsScaffold.Tests.csproj" />
+  </Folder>
+  <File Path=".gitignore" />
+  <File Path="LICENSE" />
+  <File Path="README.md" />
+</Solution>

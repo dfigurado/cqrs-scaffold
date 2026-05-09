@@ -1,0 +1,7 @@
+using MediatR;
+
+namespace {{ ProjectName }}.Application.Queries.Get{{ EntityName }};
+
+public record Get{{ EntityName }}Query(Guid Id) : IRequest<{{ EntityName }}Dto?>;
+
+public record {{ EntityName }}Dto(Guid Id, string Name, DateTime CreatedAt);

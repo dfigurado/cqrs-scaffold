@@ -1,0 +1,12 @@
+using MediatR;
+
+namespace {{ ProjectName }}.Application.Queries.Get{{ EntityName }};
+
+public class Get{{ EntityName }}Handler : IRequestHandler <Get{{ EntityName }}Query, {{ EntityName }}Dto?>
+{
+	public Task<{{ EntityName }}Dto?> Handle(Get{{ EntityName }}Query request, CancellationToken cancellationToken)
+	{
+		// TODO: inject and query IApplicationDbContext
+		return Task.FromResult<{{ EntityName }}Dto?>(null);
+	}
+}

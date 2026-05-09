@@ -1,0 +1,13 @@
+using MediatR;
+using {{ ProjectName }}.Domain.Entities;
+
+namespace {{ ProjectName }}.Application.Commands.Create{{ EntityName }};
+
+public class Create{{ EntityName }}Handler : IRequestHandler<Create{{ EntityName }}Command, Guid>
+{
+	public Task<Guid> Handle(Create{{ EntityName }}Command request, CancellationToken cancellationToken)
+	{
+		var entity = {{EntityName}}.Create(request.Name);
+		return Task.FromResult(entity.Id);
+	}
+}

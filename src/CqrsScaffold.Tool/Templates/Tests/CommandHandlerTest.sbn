@@ -1,0 +1,33 @@
+using FluentAssertions;
+using {{ ProjectName }}.Application.Commands.Create{{ EntityName }};
+
+namespace {{ ProjectName }}.Tests;
+
+public class Create{{ EntityName }}HandlerTest
+{
+	[Fact]
+	public async Task Handle_ValidCommand_ReturnsNonEmptyGuid()
+	{  
+	   // Arrange
+	   var command = new Create{{ EntityName }}Command("Test {{ EntityName }}");
+	   var handler = new Create{{ EntityName }}Handler();
+
+	   // Act
+	   var result = await handler.Handle(command, CancellationToken.None);
+
+	   // Assert
+	   result.Should().NotBe(Guid.Empty);
+	}
+
+	[Fact]
+	public async Task Handle_EmptyName_ThrowsOrReturnEmpty()
+	{
+	// Arrange
+	   var command = new Create{{ EntityName }}Command(string.Empty);
+	   var handler = new Create{{ EntityName }}Handler();
+	   // Act
+	   Func<Task> act = async () => await handler.Handle(command, CancellationToken.None);
+	   // Assert
+	   await act.Should().NotThrowAsync();
+	}
+}

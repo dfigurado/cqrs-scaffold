@@ -1,0 +1,32 @@
+using {{ ProjectName }}.Application.Commands.Create{{ EntityName }};
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddMediatR(cfg => 
+	cfg.RegisterServicesFromAssembly(typeof(Create{{ EntityName }}Command).Assembly));
+{{ if IncludeServiceBus }}
+// TODO: builder.Services.AddAzureServiceBus(builder.Configuration);
+{{ end }}
+{{ if AuthType == "Jwt" }}
+builder.Services.AddAuthentication("Bearer").AddJwtBearer();
+builder.Services.AddAuthorization();
+{{ end }}
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment()) 
+{
+	app.UseSwagger();
+	app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+{{ if AuthType == "Jwt" }}
+app.UseAuthentication();
+app.UseAuthorization();
+{{ end }}
+app.MapControllers();
+app.Run();

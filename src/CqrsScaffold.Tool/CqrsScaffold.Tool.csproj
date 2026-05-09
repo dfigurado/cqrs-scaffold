@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet Tool Configuration -->
+    <PackAsTool>True</PackAsTool>
+    <ToolCommandName>CqrsScaffold</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+
+    <!-- Package Metadata -->
+    <PackageId>CqrsScaffold</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Dilrukshan Figurado</Authors>
+    <Description>
+      A .NET CLI tool that generates production-ready CQRS/MediateR/Clean Architecture
+      project structures from a single command.
+    </Description>
+    <PackageTags>cqrs;mediat-r;clean-architecture;scaffold;dotnet-tool;code-generator</PackageTags>
+    <PackageProjectUrl>https://github.com/dfigurado/cqrs-scaffold</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.5" />
+    <PackageReference Include="Scriban" Version="7.1.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\**\*.sbn" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Templates\Application\" />
+    <Folder Include="Templates\Infrastructure\" />
+    <Folder Include="Templates\API\" />
+    <Folder Include="Templates\Tests\" />
+  </ItemGroup>
+</Project>
