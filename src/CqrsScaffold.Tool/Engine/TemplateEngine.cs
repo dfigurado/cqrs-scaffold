@@ -1,4 +1,4 @@
-﻿using Scriban;
+using Scriban;
 using System.Reflection;
 
 namespace CqrsScaffold.Tool.Engine
@@ -6,10 +6,11 @@ namespace CqrsScaffold.Tool.Engine
     public class TemplateEngine
     {
         private readonly Assembly _assembly = typeof(TemplateEngine).Assembly;
+        private static readonly string TemplateResourceNamespace = $"{typeof(TemplateEngine).Namespace![..^".Engine".Length]}.Templates";
 
         public string Render(string templateName, object model)
         {
-            var resourceName = $"{_assembly.GetName().Name}.Templates.{templateName}.sbn";
+            var resourceName = $"{TemplateResourceNamespace}.{templateName}.sbn";
             using var stream = _assembly.GetManifestResourceStream(resourceName)
                 ?? throw new InvalidOperationException($"Template not found: {templateName}");
 
