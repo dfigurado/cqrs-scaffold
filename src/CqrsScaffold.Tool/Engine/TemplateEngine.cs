@@ -9,7 +9,7 @@ namespace CqrsScaffold.Tool.Engine
 
         public string Render(string templateName, object model)
         {
-            var resourceName = $"CqrsScaffold.Tool.Templates.{templateName}.sbn";
+            var resourceName = $"{_assembly.GetName().Name}.Templates.{templateName}.sbn";
             using var stream = _assembly.GetManifestResourceStream(resourceName)
                 ?? throw new InvalidOperationException($"Template not found: {templateName}");
 
