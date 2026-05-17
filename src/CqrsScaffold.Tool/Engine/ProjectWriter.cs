@@ -123,7 +123,7 @@ namespace CqrsScaffold.Tool.Engine
 
             await File.WriteAllTextAsync(
                 Path.Combine(projectPath, "Program.cs"),
-                _engine.Render("Api.Program", config));
+                _engine.Render("API.Program", config));
         }
 
         private async Task CreateTestProjectAsync(ScaffoldConfig config, string testPath)
