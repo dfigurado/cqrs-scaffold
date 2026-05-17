@@ -16,7 +16,7 @@
     <Version>1.0.0</Version>
     <Authors>Dilrukshan Figurado</Authors>
     <Description>
-      A .NET CLI tool that generates production-ready CQRS/MediateR/Clean Architecture
+      A .NET CLI tool that generates production-ready CQRS/MediatR/Clean Architecture
       project structures from a single command.
     </Description>
     <PackageTags>cqrs;mediat-r;clean-architecture;scaffold;dotnet-tool;code-generator</PackageTags>
