@@ -53,7 +53,7 @@ namespace CqrsScaffold.Tool.Commands
                 "Path to JSON configuration file"
             );
 
-            var rootCommand = new RootCommand("CQRS/MediateR/Clean Architecture project generator")
+            var rootCommand = new RootCommand("CQRS/MediatR/Clean Architecture project generator")
             {
                 nameOption,
                 outputOption,
