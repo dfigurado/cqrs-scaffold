@@ -19,7 +19,7 @@
       A .NET CLI tool that generates production-ready CQRS/MediateR/Clean Architecture
       project structures from a single command.
     </Description>
-    <PackageTags>cqrs;mediat-r;clean-architecture;scaffold;dotnet-tool;code-generator</PackageTags>
+    <PackageTags>cqrs;mediatr;clean-architecture;scaffold;dotnet-tool;code-generator</PackageTags>
     <PackageProjectUrl>https://github.com/dfigurado/cqrs-scaffold</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
