@@ -1,0 +1,42 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # The repo root contains both cqrs-scaffold.sln and cqrs-scaffold.slnx,
+      # so every dotnet command must target the .sln explicitly (MSB1011).
+      - name: Restore
+        run: dotnet restore cqrs-scaffold.sln
+
+      - name: Build
+        run: dotnet build cqrs-scaffold.sln --no-restore --configuration Release
+
+      - name: Unit tests
+        run: >
+          dotnet test src/CqrsScaffold.Tests
+          --no-build --configuration Release --nologo
+          --logger "console;verbosity=normal"
+
+      # Integration tests run the full generation pipeline: they spawn real
+      # `dotnet new`/`add package` processes and build the generated solution.
+      - name: Integration tests
+        run: >
+          dotnet test src/CqrsScaffold.IntegrationTests
+          --no-build --configuration Release --nologo
+          --logger "console;verbosity=normal"

@@ -9,10 +9,12 @@ namespace {{ProjectName}}.Domain.Entities;
 public class {{ EntityName }}
 {
 	public Guid Id { get; private set; }
-	public string Name { get; private set; }
+	public string Name { get; private set; } = string.Empty;
 	public DateTime CreatedAt { get; private set; }
 
-	private {{ EntityName }}
+	private {{ EntityName }}()
+	{
+	}
 
 	public static {{ EntityName }} Create(string name)
 	{

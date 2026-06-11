@@ -30,6 +30,9 @@ namespace CqrsScaffold.Tool.Engine
             await CreateApiProjectAsync(config, srcPath);
             await CreateTestProjectAsync(config, testsPath);
 
+            // Wire up project-to-project references
+            await AddProjectReferencesAsync(config, srcPath, testsPath);
+
             // Add projects to solution
             await AddProjectsToSolutionAsync(config, basePath);
         }
@@ -121,9 +124,11 @@ namespace CqrsScaffold.Tool.Engine
             var projectPath = Path.Combine(srcPath, $"{config.ProjectName}.API");
             await RunDotnetAsync("new webapi", projectPath);
 
+            await RunDotnetAsync("add package Swashbuckle.AspNetCore", projectPath);
+
             await File.WriteAllTextAsync(
                 Path.Combine(projectPath, "Program.cs"),
-                _engine.Render("Api.Program", config));
+                _engine.Render("API.Program", config));
         }
 
         private async Task CreateTestProjectAsync(ScaffoldConfig config, string testPath)
@@ -140,6 +145,28 @@ namespace CqrsScaffold.Tool.Engine
 
             var defaultTest = Path.Combine(projectPath, "UnitTest1.cs");
             if (File.Exists(defaultTest)) File.Delete(defaultTest);
+        }
+
+        private async Task AddProjectReferencesAsync(ScaffoldConfig config, string srcPath, string testsPath)
+        {
+            var domainProject = Path.Combine(srcPath, $"{config.ProjectName}.Domain", $"{config.ProjectName}.Domain.csproj");
+            var applicationProject = Path.Combine(srcPath, $"{config.ProjectName}.Application", $"{config.ProjectName}.Application.csproj");
+
+            // Application -> Domain
+            await RunDotnetAsync($"add reference \"{domainProject}\"",
+                Path.Combine(srcPath, $"{config.ProjectName}.Application"));
+
+            // Infrastructure -> Domain
+            await RunDotnetAsync($"add reference \"{domainProject}\"",
+                Path.Combine(srcPath, $"{config.ProjectName}.Infrastructure"));
+
+            // API -> Application
+            await RunDotnetAsync($"add reference \"{applicationProject}\"",
+                Path.Combine(srcPath, $"{config.ProjectName}.API"));
+
+            // Tests -> Application
+            await RunDotnetAsync($"add reference \"{applicationProject}\"",
+                Path.Combine(testsPath, $"{config.ProjectName}.Tests"));
         }
 
         private async Task AddProjectsToSolutionAsync(ScaffoldConfig config, string basePath)
@@ -173,8 +200,21 @@ namespace CqrsScaffold.Tool.Engine
                 UseShellExecute = false
             };
 
-            using var process = Process.Start(psi);
+            using var process = Process.Start(psi)
+                ?? throw new InvalidOperationException($"Failed to start: dotnet {arguments}");
+
+            // Drain output streams to avoid pipe-buffer deadlock
+            var stdoutTask = process.StandardOutput.ReadToEndAsync();
+            var stderrTask = process.StandardError.ReadToEndAsync();
+
             await process.WaitForExitAsync();
+            await Task.WhenAll(stdoutTask, stderrTask);
+
+            if (process.ExitCode != 0)
+            {
+                throw new InvalidOperationException(
+                    $"'dotnet {arguments}' failed with exit code {process.ExitCode}:{Environment.NewLine}{stdoutTask.Result}{stderrTask.Result}");
+            }
         }
     }
 }

@@ -15,10 +15,9 @@ namespace CqrsScaffold.Tool.Commands
     {
         public static RootCommand Create()
         {
-            var nameOption = new Option<string>(
-                "--name", "-n",
-                "Project name (e.g., MyProject)")
+            var nameOption = new Option<string>("--name", "-n")
             {
+                Description = "Project name (e.g., MyProject)",
                 Required = true
             };
 
@@ -28,30 +27,30 @@ namespace CqrsScaffold.Tool.Commands
                 Description = "Output directory"
             };
 
-            var serviceBusOption = new Option<bool>(
-                "--service-bus",
-                "Include Azure Service Bus integration"
-            );
+            var serviceBusOption = new Option<bool>("--service-bus")
+            {
+                Description = "Include Azure Service Bus integration"
+            };
 
-            var authOption = new Option<string?>(
-                "--auth",
-                "Authentication type (e.g., Jwt, IdentityServer, None)"
-            );
+            var authOption = new Option<string?>("--auth")
+            {
+                Description = "Authentication type (e.g., Jwt, IdentityServer, None)"
+            };
 
-            var dockerOption = new Option<bool>(
-                "--docker",
-                "Include Docker support"
-            );
+            var dockerOption = new Option<bool>("--docker")
+            {
+                Description = "Include Docker support"
+            };
 
-            var ciOption = new Option<string?>(
-                "--ci",
-                "CI/CD pipeline type (e.g., GitHubActions, AzurePipelines, None)"
-            );
+            var ciOption = new Option<string?>("--ci")
+            {
+                Description = "CI/CD pipeline type (e.g., GitHubActions, AzurePipelines, None)"
+            };
 
-            var configOption = new Option<FileInfo>(
-                "--config",
-                "Path to JSON configuration file"
-            );
+            var configOption = new Option<FileInfo>("--config")
+            {
+                Description = "Path to JSON configuration file"
+            };
 
             var rootCommand = new RootCommand("CQRS/MediateR/Clean Architecture project generator")
             {
