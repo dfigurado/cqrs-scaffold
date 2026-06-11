@@ -1,0 +1,33 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required for OIDC token issuance
+      contents: read
+
+    steps:
+      - uses: actions/checout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.X
+
+      - name: Pack
+        run: dotnet pack src/CqrsScaffold.Tool/CqrsScaffold.Tool.csproj --configuration Release
+
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.dreammind1980 }} # your nuget.org profile name
+
+      - name: Push
+        run: >
+          dotnet nuget push src/CqrsScaffold.Tool/nupkg/*.nupkg
+          --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
