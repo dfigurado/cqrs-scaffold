@@ -2,18 +2,21 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <!-- Help output derives its usage line from the assembly name; keep it in
+         sync with ToolCommandName so help shows the real command. -->
+    <AssemblyName>cqrs-scaffold</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
     <!-- NuGet Tool Configuration -->
     <PackAsTool>True</PackAsTool>
-    <ToolCommandName>CqrsScaffold</ToolCommandName>
+    <ToolCommandName>cqrs-scaffold</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
 
     <!-- Package Metadata -->
     <PackageId>CqrsScaffold</PackageId>
-    <Version>1.0.0</Version>
+    <Version>0.1.0</Version>
     <Authors>Dilrukshan Figurado</Authors>
     <Description>
       A .NET CLI tool that generates production-ready CQRS/MediatR/Clean Architecture
@@ -21,8 +24,14 @@
     </Description>
     <PackageTags>cqrs;mediatr;clean-architecture;scaffold;dotnet-tool;code-generator</PackageTags>
     <PackageProjectUrl>https://github.com/dfigurado/cqrs-scaffold</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dfigurado/cqrs-scaffold</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.9" />
