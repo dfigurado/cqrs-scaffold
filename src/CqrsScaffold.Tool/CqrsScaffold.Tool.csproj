@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <!-- Help output derives its usage line from the assembly name; keep it in
+         sync with ToolCommandName so help shows the real command. -->
+    <AssemblyName>cqrs-scaffold</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
