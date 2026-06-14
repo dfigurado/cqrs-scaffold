@@ -1,4 +1,4 @@
-name: relase
+name: release
 
 on:
   push:
@@ -20,25 +20,38 @@ jobs:
         with:
           dotnet-version: 8.0.x
       
-      # Get the release on the same checks as CI before anything is published
-      - name: restore
-        run: dotnet restore cqrs-scaffolding.sln
+      # Gate the release on the same checks as CI before anything is published.
+      # The package version is taken from the tag (v1.2.3 -> 1.2.3) via the
+      # ${GITHUB_REF_NAME#v} shell expansion, so the tag is the single source
+      # of truth and never drifts from the csproj.
+      - name: Restore
+        run: dotnet restore cqrs-scaffold.sln
 
       - name: Build
-        run: dotnet build cqrs-scaffolding.sln --no-restore --configuration Release
+        run: >
+          dotnet build cqrs-scaffold.sln
+          --no-restore --configuration Release -p:Version="${GITHUB_REF_NAME#v}"
 
       - name: Test
-        run: dotnet test cqrs-scaffolding.sln --no-build --configuration Release --nologo
+        run: dotnet test cqrs-scaffold.sln --no-build --configuration Release --nologo
 
       - name: Pack
         run: >
-          dotnet pack src/CqrsScaffold.Tool/CqrsScaffold.Tool.csproj --no-build --configuration Release
+          dotnet pack src/CqrsScaffold.Tool/CqrsScaffold.Tool.csproj
+          --no-build --configuration Release -p:Version="${GITHUB_REF_NAME#v}"
 
-      - name: Nuget login (OIDC -> temp API key)
-        uses: nuget/setup-nuget@v1
+      # Exchanges this job's OIDC token for a temporary (1 hour, single-use)
+      # NuGet API key. Requires a Trusted Publishing policy on nuget.org for
+      # this repo with Workflow File = release.yml.
+      - name: NuGet login (OIDC -> temp API key)
+        uses: NuGet/login@v1
         id: login
         with:
-          user: ${{ github.NUGET_USER }} # nuget.org profile name, not email
-          
+          user: ${{ secrets.NUGET_USER }} # nuget.org profile name, not email
+
       - name: Publish
-        run: dotnet nuget push src/CqrsScaffold.Tool/bin/Release/CqrsScaffold.Tool.*.nupkg --api-key ${{ steps.login.outputs.api-key }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: >
+          dotnet nuget push src/CqrsScaffold.Tool/nupkg/*.nupkg
+          --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
