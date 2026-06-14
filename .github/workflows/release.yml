@@ -8,26 +8,50 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # required for OIDC token issuance
-      contents: read
+      id-token: write # required: GitHub OIDC token issuance for trusted publishing
+      contents: read # required: read access to the repository contents
 
     steps:
-      - uses: actions/checout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.X
+          dotnet-version: 8.0.x
+      
+      # Gate the release on the same checks as CI before anything is published.
+      # The package version is taken from the tag (v1.2.3 -> 1.2.3) via the
+      # ${GITHUB_REF_NAME#v} shell expansion, so the tag is the single source
+      # of truth and never drifts from the csproj.
+      - name: Restore
+        run: dotnet restore cqrs-scaffold.sln
+
+      - name: Build
+        run: >
+          dotnet build cqrs-scaffold.sln
+          --no-restore --configuration Release -p:Version="${GITHUB_REF_NAME#v}"
+
+      - name: Test
+        run: dotnet test cqrs-scaffold.sln --no-build --configuration Release --nologo
 
       - name: Pack
-        run: dotnet pack src/CqrsScaffold.Tool/CqrsScaffold.Tool.csproj --configuration Release
+        run: >
+          dotnet pack src/CqrsScaffold.Tool/CqrsScaffold.Tool.csproj
+          --no-build --configuration Release -p:Version="${GITHUB_REF_NAME#v}"
 
-      - name: NuGet login (OIDC → temp API key)
+      # Exchanges this job's OIDC token for a temporary (1 hour, single-use)
+      # NuGet API key. Requires a Trusted Publishing policy on nuget.org for
+      # this repo with Workflow File = release.yml.
+      - name: NuGet login (OIDC -> temp API key)
         uses: NuGet/login@v1
         id: login
         with:
-          user: ${{ secrets.dreammind1980 }} # your nuget.org profile name
+          user: ${{ secrets.NUGET_USER }} # nuget.org profile name, not email
 
-      - name: Push
+      - name: Publish
         run: >
           dotnet nuget push src/CqrsScaffold.Tool/nupkg/*.nupkg
-          --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+          --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
