@@ -11,6 +11,11 @@ jobs:
       id-token: write # required: GitHub OIDC token issuance for trusted publishing
       contents: read # required: read access to the repository contents
 
+    env:
+      SOLUTION: cqrs-scaffold.sln
+      PROJECT: src/CqrsScaffold.Tool/CqrsScaffold.Tool.csproj
+      ARTIFACTS: ${{ github.workspace }}/artifacts
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,20 +30,20 @@ jobs:
       # ${GITHUB_REF_NAME#v} shell expansion, so the tag is the single source
       # of truth and never drifts from the csproj.
       - name: Restore
-        run: dotnet restore cqrs-scaffold.sln
-
+        run: dotnet restore "$SOLUTION"
       - name: Build
         run: >
-          dotnet build cqrs-scaffold.sln
+          dotnet build "$SOLUTION"
           --no-restore --configuration Release -p:Version="${GITHUB_REF_NAME#v}"
-
       - name: Test
-        run: dotnet test cqrs-scaffold.sln --no-build --configuration Release --nologo
-
+        run: dotnet test "$SOLUTION" --no-build --configuration Release --nologo
+      # --output makes the artifact location explicit so the push step does not
+      # depend on the csproj's PackageOutputPath setting.
       - name: Pack
         run: >
-          dotnet pack src/CqrsScaffold.Tool/CqrsScaffold.Tool.csproj
+          dotnet pack "$PROJECT"
           --no-build --configuration Release -p:Version="${GITHUB_REF_NAME#v}"
+          --output "$ARTIFACTS"
 
       # Exchanges this job's OIDC token for a temporary (1 hour, single-use)
       # NuGet API key. Requires a Trusted Publishing policy on nuget.org for
@@ -48,10 +53,9 @@ jobs:
         id: login
         with:
           user: ${{ secrets.NUGET_USER }} # nuget.org profile name, not email
-
       - name: Publish
         run: >
-          dotnet nuget push src/CqrsScaffold.Tool/nupkg/*.nupkg
+          dotnet nuget push "$ARTIFACTS"/*.nupkg
           --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
           --source https://api.nuget.org/v3/index.json
           --skip-duplicate
