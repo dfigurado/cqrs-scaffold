@@ -3,7 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/CqrsScaffold.svg)](https://www.nuget.org/packages/CqrsScaffold)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-![C# Logo](https://jsdelivr.net)
+![C#](https://shields.io)
 
 A .NET 8 CLI that generates a Clean Architecture solution with CQRS and MediatR
 already wired up. One command gets you a solution file, four layered projects,
