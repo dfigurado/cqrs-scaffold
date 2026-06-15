@@ -1,5 +1,5 @@
 # CQRS-Scaffold
-
+![Codecov Coverage](https://shields.io)
 [![NuGet](https://img.shields.io/nuget/v/CqrsScaffold.svg)](https://www.nuget.org/packages/CqrsScaffold)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![C#](https://img.shields.io/badge/C%23-239120)
